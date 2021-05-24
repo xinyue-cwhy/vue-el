@@ -74,6 +74,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="addrole(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -147,6 +148,32 @@
         <el-button type="primary" @click="editvalidate">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="adddialogFormVisible"
+      @close="setRoleDialogClosed"
+    >
+      <el-form>
+        <el-form-item label="当前用户">{{ roles.name }}</el-form-item>
+        <el-form-item label="当前角色">{{ roles.role }}</el-form-item>
+        <el-form-item label="分配新角色">
+          <el-select v-model="selectvalue" placeholder="请选择">
+            <el-option
+              v-for="item in rolelist"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="adddialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="okrole">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -212,6 +239,14 @@ export default {
         mobile: '',
         id: '',
       },
+      adddialogFormVisible: false,
+      roles: {
+        name: '',
+        role: '',
+        id: '',
+      },
+      rolelist: [],
+      selectvalue: '',
     }
   },
   created() {
@@ -294,14 +329,41 @@ export default {
       if (result == 'confirm') {
         const { data: res } = await this.$http.delete('users/' + i)
         if (res.meta.status == 200) {
+          this.$message.success('删除成功')
+          console.log(this.pramas.pagenum)
           this.getuserlist()
-          return this.$message.success('删除成功')
+          return
         }
         this.$message.error('删除失败')
       }
       if (result == 'cancel') {
         return this.$message('已取消删除')
       }
+    },
+    async addrole(node) {
+      this.roles.name = node.username
+      this.roles.role = node.role_name
+      this.roles.id = node.id
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.$message.error('分配失败')
+      this.rolelist = res.data
+      this.adddialogFormVisible = true
+    },
+    async okrole() {
+      if (!this.selectvalue) {
+        return this.$message.error('请选择角色')
+      }
+      const { data: res } = await this.$http.put(
+        `users/${this.roles.id}/role`,
+        { rid: this.selectvalue }
+      )
+      if (res.meta.status !== 200) return this.$message.error('分配失败')
+      this.$message.success('更新成功')
+      this.getuserlist()
+      this.adddialogFormVisible = false
+    },
+    setRoleDialogClosed() {
+      this.selectvalue = ''
     },
   },
 }
