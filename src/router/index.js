@@ -8,6 +8,8 @@ import Roles from '../components/power/Roles.vue'
 import Rights from '../components/power/Rights.vue'
 import Categories from '../components/goods/Categories.vue'
 import Params from '../components/goods/Params.vue'
+import List from '../components/goods/List.vue'
+import Addgoods from '../components/goods/Addgoods.vue'
 
 Vue.use(VueRouter)
 
@@ -47,6 +49,14 @@ const routes = [
     {
       path: '/params',
       component: Params,
+    },
+    {
+      path: '/goods',
+      component: List,
+    },
+    {
+      path: '/goods/add',
+      component: Addgoods,
     }]
   }
 ]
@@ -65,4 +75,5 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
 export default router
