@@ -53,7 +53,7 @@
                 type="number"
               ></el-input>
             </el-form-item>
-            <el-form-item label="商品分类" prop="goods_number">
+            <el-form-item label="商品分类">
               <el-cascader
                 clearable
                 @change="handleChange"

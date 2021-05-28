@@ -7,6 +7,12 @@ import {
 } from 'element-ui'
 
 
+import Timeline from './timeline/index.js'
+import TimelineItem from './timeline-item/index.js'
+Vue.use(Timeline)
+Vue.use(TimelineItem)
+
+
 Vue.use(Steps)
 Vue.use(Step)
 Vue.use(Checkbox)
