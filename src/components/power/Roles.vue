@@ -18,6 +18,7 @@
             <el-row
               v-for="(item, index) in scope.row.children"
               :key="item.id"
+              :row-key="item.id"
               :class="['rowbottom', 'vcenter', index === 0 ? 'rowtop' : '']"
             >
               <el-col :span="5">
